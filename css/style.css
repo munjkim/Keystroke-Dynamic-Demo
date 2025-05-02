@@ -1,18 +1,14 @@
-/* css/style.css */
 :root {
-  --key-size: 50px;       /* 일반 키의 가로·세로 크기 */
-  --key-gap: 6px;         /* 키 사이 간격 */
-  --key-radius: 6px;      /* 모서리 둥글기 */
-  --kb-padding: 8px;      /* 키보드 전체 패딩 */
-  --kb-bg: #ddd;          /* 키보드 바탕색 */
-  --key-bg: #fafafa;      /* 일반 키 배경색 */
-  --key-border: #aaa;     /* 일반 키 테두리색 */
-  --key-shadow: rgba(0,0,0,0.15); /* 그림자 색 */
+  --key-size: 50px;
+  --key-gap: 6px;
+  --key-radius: 6px;
+  --kb-padding: 8px;
+  --kb-bg: #ddd;
+  --key-bg: #fafafa;
+  --key-border: #aaa;
+  --key-shadow: rgba(0,0,0,0.15);
 }
 
-
-
-/* 전체 레이아웃 */
 body {
   font-family: sans-serif;
   text-align: center;
@@ -23,7 +19,6 @@ h1 {
   margin-bottom: 1rem;
 }
 
-/* 키보드 컨테이너 */
 .keyboard {
   display: inline-block;
   background: var(--kb-bg);
@@ -31,7 +26,6 @@ h1 {
   border-radius: calc(var(--key-radius) * 1.5);
 }
 
-/* 각 행 */
 .row {
   display: flex;
   justify-content: center;
@@ -39,7 +33,6 @@ h1 {
   margin-bottom: var(--key-gap);
 }
 
-/* 기본 키 스타일 */
 .key {
   display: flex;
   align-items: center;
@@ -58,19 +51,112 @@ h1 {
   transition: background 0.1s, box-shadow 0.1s, transform 0.1s;
 }
 
-/* 눌린 상태 */
 .key.active {
   background: #ffe082;
   box-shadow: inset 0 0 5px rgba(0,0,0,0.3);
   transform: translateY(2px);
 }
 
-/* 넓은 키 (Backspace, Enter, Shift) */
 .key--wide {
   width: calc(var(--key-size) * 1.5 + var(--key-gap));
 }
 
-/* 스페이스바 */
 .key--space {
   width: calc(var(--key-size) * 8 + var(--key-gap) * 7);
+}
+
+/* CapsLock, Enter, Shift keys 폭 확장 */
+.key[data-code="CapsLock"],
+.key[data-code="Enter"],
+.key[data-code="ShiftLeft"],
+.key[data-code="ShiftRight"] {
+  width: calc(var(--key-size) * 2 + var(--key-gap));
+}
+
+/* Text Input bullets 컨테이너 */
+.text-input-container {
+  margin-top: 2rem;
+  text-align: left;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.text-input-container h2 {
+  margin-bottom: 0.5rem;
+  font-size: 1.2rem;
+}
+
+/* 입력된 텍스트 영역: 2줄 이상 넘어가면 스크롤 */
+#textInput {
+  min-height: 2rem;
+  /* 2줄만 보이이도록 높이 제한 (padding 포함) */
+  max-height: 2.5rem;        /* 약 2줄 높이 */
+  padding: 0.75rem;
+  align-items: center;     /* 세로 중앙 정렬 */
+  align-content: center;   /* 여러 줄일 때도 중앙으로 */
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background: #fff;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  overflow-y: auto;
+}
+
+/* ● 모양 */
+.bullet {
+  display: inline-block;
+  width: 0.75rem;
+  height: 0.75rem;
+  line-height: 0.75rem;
+  text-align: center;
+  border-radius: 50%;
+  background: #444;
+  color: #fff;
+  cursor: default;
+  user-select: none;
+  transition: background 0.2s, color 0.2s;
+}
+
+/* show characters 시 bullet 제거 후 문자만 표시 */
+.bullet.revealed {
+  width: auto;
+  height: auto;
+  border-radius: 0;
+  background: none;
+  color: #000;
+  padding: 0;
+  box-shadow: none;
+}
+
+/* Show Characters 체크박스 영역 */
+.toggle-visibility {
+  margin-top: 0.5rem;
+  text-align: right;
+}
+.toggle-visibility input {
+  margin-right: 0.25rem;
+}
+
+/* 커서 깜빡임 애니메이션 */
+@keyframes blink {
+  0%, 50%, 100% { opacity: 1; }
+  25%, 75%     { opacity: 0; }
+}
+
+/* 커서 스타일 */
+#cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1.2em;
+  background: #007bff;
+  vertical-align: text-bottom;
+  margin-left: 0rem;
+  animation: blink 2s step-end infinite; /* 기본 깜빡임 */
+}
+
+/* 입력 중(solid) 상태: 깜빡임 중지, 항상 보이기 */
+#cursor.solid {
+  animation: none;
+  opacity: 1;
 }
