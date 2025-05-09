@@ -19,6 +19,7 @@ h1 {
   margin-bottom: 1rem;
 }
 
+/* 키보드 시각화 */
 .keyboard {
   display: inline-block;
   background: var(--kb-bg);
@@ -65,7 +66,7 @@ h1 {
   width: calc(var(--key-size) * 8 + var(--key-gap) * 7);
 }
 
-/* CapsLock, Enter, Shift keys 폭 확장 */
+/* CapsLock, Enter, Shift 키를 두 칸 폭으로 */
 .key[data-code="CapsLock"],
 .key[data-code="Enter"],
 .key[data-code="ShiftLeft"],
@@ -73,69 +74,72 @@ h1 {
   width: calc(var(--key-size) * 2 + var(--key-gap));
 }
 
-/* Text Input bullets 컨테이너 */
+/* Text Input 섹션 레이아웃 */
 .text-input-container {
-  margin-top: 2rem;
-  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
   max-width: 600px;
-  margin-left: auto;
-  margin-right: auto;
+  margin: 2rem auto 0;
+  text-align: left;
 }
 .text-input-container h2 {
-  margin-bottom: 0.5rem;
+  margin: 0;
   font-size: 1.2rem;
 }
 
-/* 입력된 텍스트 영역: 2줄 이상 넘어가면 스크롤 */
+/* 입력 필드 + 토글 아이콘을 한 줄에 배치 */
+.input-with-toggle {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  width: 100%;
+}
+
+/* Text Input bullets 영역 */
 #textInput {
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  align-content: flex-start;
+  column-gap: 0.25rem;
+  row-gap: 0.25rem;
   min-height: 2rem;
-  /* 2줄만 보이이도록 높이 제한 (padding 포함) */
-  max-height: 2.5rem;        /* 약 2줄 높이 */
+  /* 대략 2줄 높이: bullet 0.6*2 + row-gap 0.25 + padding 0.75*2 = 3.9rem */
+  max-height: 3.9rem;
   padding: 0.75rem;
-  align-items: center;     /* 세로 중앙 정렬 */
-  align-content: center;   /* 여러 줄일 때도 중앙으로 */
   border: 1px solid #ccc;
   border-radius: 8px;
   background: #fff;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
   overflow-y: auto;
 }
 
 /* ● 모양 */
 .bullet {
   display: inline-block;
-  width: 0.75rem;
-  height: 0.75rem;
-  line-height: 0.75rem;
+  width: 0.6rem;
+  height: 0.6rem;
+  line-height: 0.6rem;
   text-align: center;
   border-radius: 50%;
   background: #444;
-  color: #fff;
+  color: transparent;
   cursor: default;
   user-select: none;
   transition: background 0.2s, color 0.2s;
 }
 
-/* show characters 시 bullet 제거 후 문자만 표시 */
+/* Show Characters 시 문자만 표시 */
 .bullet.revealed {
   width: auto;
   height: auto;
+  line-height: normal;
   border-radius: 0;
   background: none;
   color: #000;
   padding: 0;
   box-shadow: none;
-}
-
-/* Show Characters 체크박스 영역 */
-.toggle-visibility {
-  margin-top: 0.5rem;
-  text-align: right;
-}
-.toggle-visibility input {
-  margin-right: 0.25rem;
 }
 
 /* 커서 깜빡임 애니메이션 */
@@ -148,15 +152,131 @@ h1 {
 #cursor {
   display: inline-block;
   width: 2px;
-  height: 1.2em;
+  height: 1.2em;            /* 글자 높이보다 살짝 큼 */
   background: #007bff;
   vertical-align: text-bottom;
-  margin-left: 0rem;
-  animation: blink 2s step-end infinite; /* 기본 깜빡임 */
+  margin-left: 0;           /* 바로 붙도록 */
+  animation: blink 2s step-end infinite;
 }
 
-/* 입력 중(solid) 상태: 깜빡임 중지, 항상 보이기 */
+/* 입력 중(solid) 상태: 깜빡임 중지 */
 #cursor.solid {
   animation: none;
   opacity: 1;
+}
+
+/* From Uiverse.io by catraco */
+/*------ Settings ------*/
+.container {
+  --color: #a5a5b0;
+  --size: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  cursor: pointer;
+  font-size: var(--size);
+  user-select: none;
+  fill: var(--color);
+}
+
+.container .eye,
+.container .eye-slash {
+  position: absolute;
+  animation: keyframes-fill .5s;
+}
+
+.container .eye-slash {
+  display: none;
+}
+
+/* 초기 상태 (unchecked -> hide characters) */
+.container input:not(:checked) ~ .eye {
+  display: none;
+}
+.container input:not(:checked) ~ .eye-slash {
+  display: block;
+}
+
+/* 체크된 상태 (checked -> show characters) */
+.container input:checked ~ .eye {
+  display: block;
+}
+.container input:checked ~ .eye-slash {
+  display: none;
+}
+
+/* Hide the default checkbox */
+.container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+/* Animation */
+@keyframes keyframes-fill {
+  0% { transform: scale(0); opacity: 0; }
+  50% { transform: scale(1.2); }
+}
+
+/* Keystroke 로그 영역 */
+.keystroke-container {
+  margin-top: 2rem;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: left;
+}
+.keystroke-container h2 {
+  margin-bottom: 0.5rem;
+  font-size: 1.2rem;
+}
+/* 로그 항목 스타일 */
+#keystrokeLog {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: #fafafa;
+  font-family: monospace;
+  max-height: 6rem;
+  overflow-y: auto;
+}
+.keystroke-entry {
+  margin: 0.25rem 0;
+}
+
+/* Keystroke Table 스타일 */
+.keystroke-table-wrapper {
+  max-height: 8rem;         /* 원하는 높이만큼 고정 */
+  overflow-y: auto;         /* 넘치면 스크롤 */
+  margin-top: 0.5rem;
+}
+#keystrokeTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: monospace;
+}
+#keystrokeTable th,
+#keystrokeTable td {
+  border: 1px solid #ccc;
+  padding: 0.25rem 0.5rem;
+  text-align: left;
+}
+#keystrokeTable thead {
+  background: #f0f0f0;
+  position: sticky;
+  top: 0;
+}
+
+/* 실시간 그래프 영역 */
+.chart-container {
+  max-width: 600px;
+  margin: 2rem auto;
+  height: 200px;
+}
+#keystrokeChart {
+  width: 100%;
+  height: 100%;
 }
